@@ -1,16 +1,72 @@
 <x-admin-layout>
+    <style>
+		[x-cloak] {
+			display: none;
+		}
+
+		.duration-300 {
+			transition-duration: 300ms;
+		}
+
+		.ease-in {
+			transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+		}
+
+		.ease-out {
+			transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+		}
+
+		.scale-90 {
+			transform: scale(.9);
+		}
+
+		.scale-100 {
+			transform: scale(1);
+		}
+	</style>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-12 mx-auto container">
+        <div class="mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    Permission Area
+                <div class="p-4 flex justify-end">
+                    <a href="{{ route('admin.permissions.create') }}"><button class="px-3 py-1 rounded-sm  text-white bg-green-700">Crear Permiso</button></a>
                 </div>
+                <div class="relative overflow-x-auto p-3">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 p-4">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Nombre de Permiso
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($permissions as $permission)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ $permission->name }}
+                                </th>
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <div class="flex justify-end">
+                                        <div class="space-x-2 flex">
+                                            <a href="{{ route('admin.permissions.edit',$permission->id) }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-sm">Editar</a>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
