@@ -30,6 +30,10 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::get('/', [IndexController::class, 'index'])->name('index');
     Route::resource('/roles', RoleController::class);
     Route::resource('/permissions', PermissionController::class);
+    Route::post('/roles/{role}/permissions',[RoleController::class,'asignarPermiso'])->name('roles.permissions');
+    Route::delete('/roles/{role}/permissions/{permission}',[RoleController::class,'revocarPermiso'])->name('roles.permissions.revoke');
+    Route::post('/permissions/{permission}/roles',[PermissionController::class,'asignarRole'])->name('permissions.roles');
+    Route::delete('/permissions/{permission}/roles/{role}',[PermissionController::class,'revocarPermiso'])->name('permissions.roles.remove');
 });
 
 Route::middleware('auth')->group(function () {
