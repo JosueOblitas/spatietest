@@ -11,39 +11,46 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::whereNotIn('name',['admin'])->get();
-        return view('admin.roles.index',compact('roles'));
+        $roles = Role::whereNotIn('name', ['superadmin'])->get();
+        return view('admin.roles.index', compact('roles'));
     }
-    public function  create(){
+    public function create()
+    {
         return view('admin.roles.create');
     }
-    public function store(Request $request){
-        $validated = $request->validate(['name' => ['required','min:3']]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate(['name' => ['required', 'min:3']]);
         Role::create($validated);
-        return to_route('admin.roles.index');
+        return to_route('admin.roles.index')->success('Rol creado con exito');
     }
-    public function edit(Role $role){
+    public function edit(Role $role)
+    {
         $permissions = Permission::all();
-        return view('admin.roles.edit',compact('role','permissions'));
+        return view('admin.roles.edit', compact('role', 'permissions'));
     }
-    public function update(Request $request,Role $role){
-        $validated = $request->validate(["name" => ["required","min:3", "unique:roles,name," . $role->id]]);
+    public function update(Request $request, Role $role)
+    {
+        $validated = $request->validate(["name" => ["required", "min:3", "unique:roles,name," . $role->id]]);
         $role->update($validated);
         return to_route('admin.roles.index')->success("Rol eliminado correctamente");
     }
-    public function destroy(Role $role){
+    public function destroy(Role $role)
+    {
         $role->delete();
         return to_route('admin.roles.index')->success("El rol fue eliminado correctamente");
     }
-    public function asignarPermiso(Request $request,Role $role){
-        if($role->hasPermissionTo($request->permission)){
+    public function asignarPermiso(Request $request, Role $role)
+    {
+        if ($role->hasPermissionTo($request->permission)) {
             return back()->info("El rol ya tiene agregado este permiso");
         }
         $role->givePermissionTo($request->permission);
         return back()->success("Permiso agregado correctamente");
     }
-    public function revocarPermiso(Role $role,Permission $permission){
-        if($role->hasPermissionTo($permission)){
+    public function revocarPermiso(Role $role, Permission $permission)
+    {
+        if ($role->hasPermissionTo($permission)) {
             $role->revokePermissionTo($permission);
             return back()->success("El permiso fue revocado");
         }
